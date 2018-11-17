@@ -1,59 +1,34 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Grocery</ion-title>
+    <ion-title>{{title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-    <ion-list>
-        <ion-item-sliding>
-          <ion-item>
-            <h2>Milk</h2>
-            <p>1</p>
-          </ion-item>
-          <ion-item-options>
-            <button ion-button color="secondary" icon-start>
-              <ion-icon name="trash"></ion-icon>
-              Done
-            </button>
-          </ion-item-options>
-        </ion-item-sliding>
-        <ion-item-sliding>
-            <ion-item>
-              <h2>Bread</h2>
-              <p>2</p>
-            </ion-item>
-            <ion-item-options>
-              <button ion-button color="secondary" icon-start>
-                <ion-icon name="trash"></ion-icon>
-                Done
-              </button>
-            </ion-item-options>
-          </ion-item-sliding>  
-          <ion-item-sliding>
-            <ion-item>
-              <h2>Eggs</h2>
-              <p>2</p>
-            </ion-item>
-            <ion-item-options>
-              <button ion-button color="secondary" icon-start>
-                <ion-icon name="trash"></ion-icon>
-                Done
-              </button>
-            </ion-item-options>
-          </ion-item-sliding>  
-          <ion-item-sliding>
-            <ion-item>
-              <h2>Apples</h2>
-              <p>3</p>
-            </ion-item>
-            <ion-item-options>
-              <button ion-button color="secondary" icon-start>
-                <ion-icon name="trash"></ion-icon>
-                Done
-              </button>
-            </ion-item-options>
-          </ion-item-sliding>  
-  </ion-list>      
+  <h3 text-center *ngIf="loadItems().length === 0">
+    No items available on the list! 
+  </h3>
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of loadItems(); let i = index">
+      <ion-item>
+        <h2>{{item.name}}</h2>
+        <p>{{item.quantity}}</p>
+      </ion-item>
+      <ion-item-options>
+        <button (click)="editItem(item, i)" ion-button color="primary" icon-start>
+          <ion-icon name="create"></ion-icon>
+          Edit
+        </button>
+        <button (click)="removeItem(item, i)" ion-button color="secondary" icon-start>
+          <ion-icon name="trash"></ion-icon>
+          Done
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <ion-fab bottom right>
+    <button (click)="addItem(item)" ion-fab mini>
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>
-
