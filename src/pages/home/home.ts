@@ -11,53 +11,62 @@ import { SocialSharing } from '@ionic-native/social-sharing';
   templateUrl: 'home.html'
 })
 export class HomePage {
-
   title = "Grocery List";
+  items = [];
+  errorMessage: string;
 
-  constructor(public navCtrl: NavController, public ToastCtrl: ToastController, public alertCtrl: AlertController, public dataService: GrocerieServiceProvider, public inputDialogueService: InputDialogueServiceProvider, public socialSharing: SocialSharing) {
-
-  }
-
-  loadItems() {
-    return this.dataService.getItems();
-  }
-
-  removeItem(item, index) {
-    console.log("Removing item - ", item, index);
-    const toast = this.ToastCtrl.create({
-      message: "Removing item - " + item.name + " ...",
-      duration: 3000
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public toastCtrl: ToastController, public dataService: GrocerieServiceProvider,  public inputDialogService: InputDialogueServiceProvider, public socialSharing: SocialSharing) {
+    dataService.dataChanged$.subscribe((dataChanged: boolean) => {
+      this.loadItems();
     });
-    toast.present();
+  }
 
-    this.dataService.removeItem(index);
+  ionViewDidLoad(){
+    this.loadItems();
+  }
+
+  loadItems(){
+    this.dataService.getItems()
+      .subscribe(
+        items => this.items = items,
+        error => this.errorMessage = <any>error);
+  }
+
+  removeItem(id) {
+    this.dataService.removeItem(id);
   }
 
   shareItem(item, index) {
-    console.log("Sharing item - ", item, index);
-    const toast = this.ToastCtrl.create({
-      message: "Sharing item - " + item.name + " ...",
+    const toast = this.toastCtrl.create({
+      message: "Sharing Item -  " + index + "...",
+      duration: 3000
+    });
+
+    toast.present();
+
+    let message = 'Grocery Item - Name: ' + item.name + " - Quantity: " + item.quantity;
+    let subject = "Shared via Groceries app";
+
+    this.socialSharing.share(message, subject).then(() => {
+      
+    }).catch((error) => {
+      console.log("Error while sharing ", error)
+    });
+  }
+
+
+  addItem(){
+    this.inputDialogService.showPrompt();
+  }
+
+  editItem(item, index){
+    console.log("Edit Item - ", item, index)
+    const toast = this.toastCtrl.create({
       duration: 3000
     });
     toast.present();
+    this.inputDialogService.showPrompt(item, index);
 
-    let message = "Grocery Item - Name: " + item.name + " - Quantity: " + item.quantity;
-    let subject = "Shared via Groceries App";
-
-    this.socialSharing.share(message, subject).then(() => {
-      console.log("Shared successfully.");
-    }).catch((error) => {
-      console.error("Error while sharing ", error);
-    });
   }
 
-  editItem(item, index) {
-    console.log("Edit item - ", item, index);
-    this.inputDialogueService.showPrompt(item, index);
-  }
-
-  addItem() {
-    console.log("Adding item");
-    this.inputDialogueService.showPrompt();
-  }
 }
