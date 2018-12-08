@@ -20,6 +20,7 @@ export class InputDialogueServiceProvider {
     if(index !== undefined) {
       var id = item._id;
     }
+  
     const prompt = this.alertCtrl.create({ 
       title: item ? 'Edit Item' : 'Add Item',
       message: item ? "Please edit item..." : "Please enter an item...",
@@ -45,13 +46,15 @@ export class InputDialogueServiceProvider {
         {
           text: 'Save',
           handler: item => {
-            console.log('Saved clicked', item);
             if (index !== undefined) {
               this.dataService.editItem(item, id, index);
+              console.log('Edit clicked', item);
             }
             else {
               this.dataService.addItem(item);
+              console.log('Add clicked', item);
             }
+            console.log('Saved clicked', item);
           }
         }
       ]

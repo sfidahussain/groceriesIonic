@@ -16,7 +16,7 @@ export class GrocerieServiceProvider {
 
   items: any = [];
 
-  baseURL = "http://localhost:8080";
+  baseURL = "https://groceries-server-demo-sanaa.herokuapp.com";
 
   dataChanged$: Observable<boolean>;
 
@@ -57,6 +57,7 @@ export class GrocerieServiceProvider {
     this.http.delete(this.baseURL + "/api/groceries/" + id).subscribe(res => {
       this.items = res;
       this.dataChangeSubject.next(true);
+      console.log('deleting item from db');
     });
   }
 
@@ -64,6 +65,7 @@ export class GrocerieServiceProvider {
     this.http.post(this.baseURL + "/api/groceries/", item).subscribe(res => {
       this.items = res;
       this.dataChangeSubject.next(true);
+      console.log('adding item from db');
     });
   }
 
@@ -71,6 +73,7 @@ export class GrocerieServiceProvider {
     this.http.put(this.baseURL + "/api/groceries/" + id, item).subscribe(res => {
       this.items = res;
       this.dataChangeSubject.next(true);
+      console.log('editing item from db');
     });
   }
 
